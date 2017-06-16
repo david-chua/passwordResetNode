@@ -35,3 +35,16 @@ app.get('/', function(req,res) {
 app.listen(app.get('port'), function() {
   console.log('Express server listening on port ' + app.get('port'));
 });
+
+
+// User model
+/*
+ Note: Properties resetPasswordToken and resetPassword won't be part of the created model, because they are set only after password reset is submitted so those properties would not be set when creating a new user. 
+*/
+var userSchema = new mongoose.Schema({
+  username: { type: String, required: true, unique: true },
+  email: { type: String, required: true, unique: true },
+  password: { type: String, required: true },
+  resetPasswordToken: String,
+  resetPasswordExpires: Date
+});
