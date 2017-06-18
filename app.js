@@ -59,10 +59,10 @@ userSchema.pre('save', function(next) {
 
   if (!user.isModified('password')) return next();
 
-  bcrypt.genSALT(SALT_FACTOR, function(err, salt) {
+  bcrypt.genSalt(SALT_FACTOR, function(err, salt) {
     if (err) return next(err);
 
-    bcrypt.hash(user.password, salt, null,function(err, has) {
+    bcrypt.hash(user.password, salt, null,function(err, hash) {
       if (err) return next (err);
       user.password = hash;
       next();
@@ -148,7 +148,7 @@ app.post('/signup', function(req,res) {
 });
 
 app.get('/logout', function(req,res) {
-  res.logout();
+  req.logout();
   res.redirect('/');
 });
 
