@@ -8,6 +8,7 @@ var session = require('express-session');
 var mongoose = require('mongoose');
 var flash = require('express-flash');
 var nodemailer = require('nodemailer');
+var smtpTransport = require('nodemailer-smtp-transport');
 var passport = require('passport');
 var LocalStrategy = require('passport-local').Strategy;
 var bcrypt = require('bcrypt-nodejs');
@@ -78,6 +79,8 @@ userSchema.methods.comparePassword = function(candidatePassword, cb) {
 };
 
 var User = mongoose.model('User', userSchema);
+
+mongoose.Promise = global.Promise;
 
 //interact with database
 mongoose.connect('localhost');
@@ -159,7 +162,7 @@ app.get('/forgot', function(req,res) {
   });
 });
 
-app.post('/forgot', function(req,res,next) {
+app.post('/forgot', function(req, res, next) {
   async.waterfall([
     function(done) {
       crypto.randomBytes(20, function(err, buf) {
@@ -182,7 +185,6 @@ app.post('/forgot', function(req,res,next) {
         });
       });
     },
-
     function(token, user, done) {
       var smtpTransport = nodemailer.createTransport('SMTP', {
         service: 'SendGrid',
