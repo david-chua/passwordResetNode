@@ -131,6 +131,32 @@ app.get('/signup', function(req,res) {
   });
 });
 
+app.post('/signup', function(req,res) {
+  var user = new User({
+    username: req.body.username,
+    email: req.body.email,
+    password: req.body.password
+  });
+
+  user.save(function(err) {
+    req.logIn(user, function(err) {
+      res.redirect('/');
+    });
+  });
+});
+
+app.get('/logout', function(req,res) {
+  res.logout();
+  res.redirect('/');
+});
+
+
+app.get('/forgot', function(req,res) {
+  res.render('forgot', {
+    user: req.user
+  });
+});
+
 app.listen(app.get('port'), function() {
   console.log('Express server listening on port ' + app.get('port'));
 });
